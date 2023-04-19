@@ -19,7 +19,6 @@ namespace NMSU_ERrhoSampler{
 	void DecayParts(Crandy *randyset,CpartList *partlist);
 	void IncrementEQtest(CpartList *partlist,Eigen::VectorXd &EQtot,Eigen::VectorXd &EQTarget);
 	void Chi4Test(CpartList *partlist,Eigen::MatrixXd &chitest);
-	void GetDecayCorrs(CparameterMap *parmap,Crandy *randy,CpartList *motherpartlist);
 }
 
 class CcorrVsEta{
@@ -37,6 +36,20 @@ public:
 class CcorrVsEtaOleh : public CcorrVsEta{
 public:
 	void GetCorrVsEta(double eta,Eigen::MatrixXd &corr);
+    CcorrVsEtaOleh()
+    {
+        std::string fol_name= "./CFs/";
+        this->init1(fol_name);
+    }
+private:
+    ifstream t_file;
+    void init1(std::string);
+    static const int Ncharges=7;
+    static const int Netas=1002;
+    std::string charg_names[Ncharges]={"E","Ux","Uy","Uz","B","Q","S"};
+    std::vector<std::vector<double>> corr_input=std::vector<std::vector<double>>(Ncharges*Ncharges,std::vector<double>(Netas,0  ));
+    int index_eta(double);
+    int index_charge(int,int);
 };
 
 class CcorrVsY{
@@ -52,17 +65,6 @@ public:
 	double GetPairWeight(Cpart *part1,Cpart *part2,Eigen::MatrixXd &CorrMatrix);
 	void WriteResults();
 	
-};
-
-class CdecayCorrVsY{
-public:
-	CparameterMap *parmap;
-	double DY;
-	int NY;
-	CdecayCorrVsY(CparameterMap *parmap);
-	vector<Eigen::MatrixXd> corr;
-	void Increment(CpartList *partlist);
-	void WriteResults();
 };
 
 
